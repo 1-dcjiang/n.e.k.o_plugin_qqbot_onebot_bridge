@@ -2,6 +2,11 @@
 
 这是一条**结构**测试：证明入口签名、装饰器参数、返回值形态不会当场炸。
 真机行为（LLM 工具注册 IPC、推送渲染、真实收消息 / 回发）仍需在 N.E.K.O 里验。
+
+注意：市场 CI 会把插件挂载到真实 N.E.K.O 源码树里跑 pytest，此时 ``plugin.sdk``
+解析到真实 SDK 而不是 ``tests/stub``。因此本测试同时对齐真实 SDK 契约：
+工具元数据挂在 ``__neko_llm_tool_meta__`` 属性上（对象带 ``name`` / ``parameters``
+字段）；运行时配置通过覆写 ``plugin.config`` 注入，而不是依赖桩 ctx。
 """
 
 import asyncio
@@ -18,6 +23,7 @@ for p in (STUB, PARENT):
         sys.path.insert(0, p)
 
 PLUGIN_PKG = "qqbot_onebot_bridge"
+LLM_TOOL_META_ATTR = "__neko_llm_tool_meta__"
 
 
 def _load_plugin_module():
@@ -68,6 +74,9 @@ class TestPluginRuntime(unittest.TestCase):
 
     def _start(self, section=None):
         plugin = self._make(section)
+        # 真实 SDK 基类构造时把 self.config 换成宿主 PluginConfig；测试里覆写回
+        # 注入的桩配置，使 _reload_config 能读到本节传入的配置段。
+        plugin.config = _Config(section)
         res = asyncio.run(plugin.on_startup())
         return plugin, res
 
@@ -170,10 +179,10 @@ class TestPluginRuntime(unittest.TestCase):
         for method, tool_name in expected.items():
             fn = getattr(self.plugin_cls, method, None)
             self.assertIsNotNone(fn, method)
-            meta = getattr(fn, "__llm_tool_meta__", None)
+            meta = getattr(fn, LLM_TOOL_META_ATTR, None)
             self.assertIsNotNone(meta, f"{method} 缺少 llm_tool 元数据")
-            self.assertEqual(meta["name"], tool_name)
-            self.assertIn("properties", meta["parameters"])
+            self.assertEqual(meta.name, tool_name)
+            self.assertIn("properties", meta.parameters)
 
 
 if __name__ == "__main__":
