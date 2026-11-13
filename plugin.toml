@@ -26,13 +26,6 @@ timeout = 10
 [plugin.store]
 enabled = false
 
-[plugin.database]
-enabled = false
-
-# 第三方依赖（内联表格式）
-[plugin.dependencies]
-websockets = ">=12.0"
-
 [plugin.ui]
 enabled = false
 

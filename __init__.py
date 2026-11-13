@@ -87,7 +87,7 @@ class QQBotOneBotBridgePlugin(NekoPluginBase):
             return Err(SdkError(f"配置读取失败: {exc}"))
 
         if importlib.util.find_spec("websockets") is None:
-            return Err(SdkError("缺少依赖 websockets，请先在插件依赖中安装"))
+            return Err(SdkError("缺少依赖 websockets，请在宿主 Python 环境安装 websockets>=12.0"))
 
         if self._lock is None:
             self._lock = asyncio.Lock()

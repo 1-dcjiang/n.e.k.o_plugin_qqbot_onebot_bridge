@@ -27,7 +27,8 @@
 1. 把整个目录放到 Neko 源码树插件目录：
    `N.E.K.O/plugin/plugins/qqbot_onebot_bridge/`
    （目录名、`plugin.id`、entry 包名三者保持一致。）
-2. 确认依赖：`websockets`（已在 `plugin.toml [plugin.dependencies]` 声明）。
+2. 确认依赖：`websockets>=12.0`。若宿主 Python 环境未内置，先在该环境安装：
+   `pip install "websockets>=12.0"`。插件启动时会探测该库，缺失则返回明确错误。
 3. 在插件运行时配置里填写 `[qqbot_onebot_bridge]` 段（参考 `config.example.toml`）。
 4. 启动 NapCat / OneBot 服务端并开放正向 WebSocket，再在 Neko 里启动 / Reload 本插件。
 5. 静态检查：`uv run neko-plugin check qqbot_onebot_bridge --strict`。
