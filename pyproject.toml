@@ -4,3 +4,7 @@ version = "0.1.0"
 # Python 第三方依赖在 plugin.toml [plugin.dependencies] 声明，由 N.E.K.O 安装器处理；
 # 这里保持为空，避免市场 CLI 要求把第三方包内嵌进 vendor/。
 dependencies = []
+
+[tool.ruff]
+# vendor/ 是上游原样内嵌的代码，不做 lint 改造；与市场 CI 的 `--exclude vendor` 口径一致。
+exclude = ["vendor"]
