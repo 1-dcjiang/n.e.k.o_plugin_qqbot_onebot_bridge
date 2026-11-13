@@ -1,0 +1,47 @@
+[plugin]
+id = "qqbot_onebot_bridge"
+name = "QQ OneBot 桥接"
+description = "适配 qqbot-onebot-bridge 的 Neko 插件：把自托管 NapCat / OneBot 11 服务端的 QQ 群聊与私聊消息接入 Neko，并提供回发通道。仅做桥接，不登录 QQ、不处理签名。"
+short_description = "Bridge a self-hosted NapCat / OneBot 11 server into Neko: relay group/private messages and reply over WebSocket."
+keywords = [
+    "QQ", "机器人", "桥接", "OneBot", "NapCat", "WebSocket", "群聊", "私聊",
+    "bridge", "onebot", "napcat", "onebot11", "qqbot", "websocket", "chatbot",
+]
+version = "0.1.0"
+type = "plugin"
+entry = "plugin.plugins.qqbot_onebot_bridge:QQBotOneBotBridgePlugin"
+
+[plugin.author]
+name = "jusspound-netizen (Neko 适配层)"
+
+[plugin.sdk]
+recommended = ">=0.1.0,<0.2.0"
+supported = ">=0.1.0,<0.3.0"
+
+[plugin_runtime]
+enabled = true
+auto_start = true
+timeout = 10
+
+[plugin.store]
+enabled = false
+
+[plugin.database]
+enabled = false
+
+# 第三方依赖（内联表格式）
+[plugin.dependencies]
+websockets = ">=12.0"
+
+[plugin.ui]
+enabled = false
+
+# ── 业务配置段（段名与 __init__.py 中 self.config.dump()["qqbot_onebot_bridge"] 对应）──
+[qqbot_onebot_bridge]
+ws_url = "ws://127.0.0.1:3001"   # NapCat / OneBot 11 正向 WebSocket 地址
+reconnect_delay = 3.0            # 断线重连延迟（秒）
+relay_group = true               # 是否转发群聊消息
+relay_private = true             # 是否转发私聊消息
+relay_to_chat = true             # 是否把收到的消息推送进 Neko 聊天
+ai_behavior = "read"             # read=进上下文不打断 / respond=立即触发一轮 / blind=忽略
+max_recent_messages = 50         # 内存中保留的最近消息条数

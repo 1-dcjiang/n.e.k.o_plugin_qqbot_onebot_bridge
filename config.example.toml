@@ -1,0 +1,24 @@
+# 复制到插件运行时配置后填写；不要把真实环境信息提交进仓库。
+[qqbot_onebot_bridge]
+
+# NapCat / OneBot 11 正向 WebSocket 地址
+ws_url = "ws://127.0.0.1:3001"
+
+# 断线重连延迟（秒）
+reconnect_delay = 3.0
+
+# 是否转发群聊 / 私聊消息
+relay_group = true
+relay_private = true
+
+# 是否把收到的消息推送进 Neko 聊天
+relay_to_chat = true
+
+# AI 对推送消息的处理方式：
+#   read     写入上下文，不打断，下一轮自然提及（默认）
+#   respond  立即触发一轮回复
+#   blind    不交给 AI，仅本地缓冲
+ai_behavior = "read"
+
+# 内存中保留的最近消息条数
+max_recent_messages = 50

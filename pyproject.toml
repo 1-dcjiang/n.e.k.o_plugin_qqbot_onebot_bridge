@@ -1,0 +1,4 @@
+[project]
+name = "qqbot_onebot_bridge"
+version = "0.1.0"
+dependencies = ["websockets>=12.0"]
