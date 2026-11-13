@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import asyncio
+import importlib.util
 from collections import deque
 from typing import Any
 
@@ -85,9 +86,7 @@ class QQBotOneBotBridgePlugin(NekoPluginBase):
             self.logger.exception("config load failed")
             return Err(SdkError(f"配置读取失败: {exc}"))
 
-        try:
-            import websockets  # noqa: F401  # 仅做依赖存在性校验
-        except ImportError:
+        if importlib.util.find_spec("websockets") is None:
             return Err(SdkError("缺少依赖 websockets，请先在插件依赖中安装"))
 
         if self._lock is None:
